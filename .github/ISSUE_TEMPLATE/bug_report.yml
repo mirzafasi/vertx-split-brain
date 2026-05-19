@@ -1,0 +1,61 @@
+name: Bug report
+description: Report something that doesn't work as expected
+labels: [ "bug", "triage" ]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including what you expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce
+      description: |
+        Steps to reproduce. If possible, use the included `docker-compose.yml` and `scripts/partition.sh` as the basis — that gives us a shared starting point.
+      placeholder: |
+        1. `docker compose up -d`
+        2. `./scripts/partition.sh split`
+        3. Wait 20s
+        4. Observe: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output
+      description: Logs from at least two nodes are usually needed to diagnose detection bugs. Use code fences.
+      render: shell
+
+  - type: input
+    id: vertx-version
+    attributes:
+      label: Vert.x version
+      placeholder: "4.5.10"
+    validations:
+      required: true
+
+  - type: input
+    id: hazelcast-version
+    attributes:
+      label: Hazelcast version
+      placeholder: "5.3.7"
+    validations:
+      required: true
+
+  - type: input
+    id: tool-version
+    attributes:
+      label: vertx-split-brain version or commit
+    validations:
+      required: true
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: JDK, OS, container runtime, Kubernetes version if relevant.
