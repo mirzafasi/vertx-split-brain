@@ -1,7 +1,6 @@
 package com.splitbrain.core;
 
 import com.hazelcast.config.Config;
-import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.splitbrain.alert.Alerter;
 import com.splitbrain.api.ControlApi;
@@ -46,9 +45,11 @@ public class MainVerticle extends AbstractVerticle {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
 
+    private static HazelcastClusterManager CLUSTER_MANAGER;
+
     public static void main(String[] args) {
-        HazelcastClusterManager clusterManager = new HazelcastClusterManager(buildHazelcastConfig());
-        VertxOptions opts = new VertxOptions().setClusterManager(clusterManager);
+        CLUSTER_MANAGER = new HazelcastClusterManager(buildHazelcastConfig());
+        VertxOptions opts = new VertxOptions().setClusterManager(CLUSTER_MANAGER);
 
         Vertx.clusteredVertx(opts).onSuccess(vertx ->
                 vertx.deployVerticle(new MainVerticle())
@@ -77,7 +78,7 @@ public class MainVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> startPromise) {
-        HazelcastInstance hz = Hazelcast.getAllHazelcastInstances().iterator().next();
+        HazelcastInstance hz = CLUSTER_MANAGER.getHazelcastInstance();
 
         var collector  = new LocalViewCollector(hz);
         var fetcher    = new PeerViewFetcher(vertx, 2000);
